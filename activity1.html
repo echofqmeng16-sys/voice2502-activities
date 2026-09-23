@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activity 1 · Word Painting in Music | Classical Music Appreciation</title>
+<style>
+:root{--paper:#faf6ef;--ink:#2b2620;--accent:#8c2f39;--gold:#b98a2f;--card:#ffffff;--line:#e7ddcc;--ok:#2e7d4f;--bad:#b23b3b;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;line-height:1.75;max-width:680px;margin:0 auto;padding:0 16px 96px;}
+body.locked .big-btn,body.locked .opt,body.locked .chip,body.locked textarea,body.locked .note-btn{pointer-events:none;opacity:.45}
+header{background:linear-gradient(135deg,#8c2f39,#5f1f27);color:#fff;border-radius:0 0 20px 20px;padding:28px 22px 22px;margin:0 -16px 20px;}
+header .tag{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:1px 12px;font-size:13px;margin-bottom:10px}
+header h1{font-size:24px;line-height:1.35;font-family:Georgia,"Times New Roman",serif;}
+header p{opacity:.92;font-size:14px;margin-top:8px}
+h2{font-size:18px;margin:26px 0 10px;padding-left:12px;border-left:4px solid var(--accent);font-family:Georgia,"Times New Roman",serif;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 2px 10px rgba(60,40,20,.05);}
+.namecard{background:#fdf3e3;border:2px solid var(--gold);}
+.namecard input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px;font-size:17px;background:#fff;margin:8px 0;}
+.name-btn{width:100%;border:none;background:var(--accent);color:#fff;border-radius:12px;padding:12px;font-size:16px;font-weight:700;cursor:pointer;}
+.greet{display:none;color:var(--ok);font-weight:700;margin-top:4px}
+ol.steps{padding-left:22px}
+ol.steps li{margin:8px 0}
+ol.steps b{color:var(--accent)}
+.lyric{font-size:16px;line-height:2.05;font-family:Georgia,"Times New Roman",serif;}
+.lyric .zh{display:block;font-size:13px;color:#7a7166;font-style:italic;line-height:1.6;margin-bottom:6px}
+mark{background:#fbe9b7;padding:0 4px;border-radius:4px;font-weight:700;color:#6b4d00;}
+.btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.big-btn{border:2px solid var(--line);background:#fff;border-radius:14px;padding:14px 8px;font-size:15px;font-weight:700;color:var(--ink);cursor:pointer;transition:.15s;line-height:1.4}
+.big-btn small{display:block;font-weight:400;color:#8b8177;font-size:12px}
+.big-btn.on{border-color:var(--ok);background:#e9f5ee;color:var(--ok);}
+.quiz-q{padding:12px 0;border-bottom:1px dashed var(--line);}
+.quiz-q:last-child{border-bottom:none}
+.quiz-q .qt{font-weight:700;margin-bottom:8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-size:14px;cursor:pointer}
+.opt.right{border-color:var(--ok);background:#e9f5ee;color:var(--ok);font-weight:700}
+.opt.wrong{border-color:var(--bad);background:#f9eaea;color:var(--bad);}
+.opt:disabled{cursor:default;opacity:.9}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 16px;font-size:15px;cursor:pointer}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.hint{font-size:13px;color:#8b8177;margin-top:6px}
+.result{position:fixed;left:0;right:0;bottom:0;background:#2b2620;color:#fff;padding:10px 16px;font-size:14px;z-index:9;text-align:center;}
+.result b{color:#f3c96b}
+textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:10px;font-size:15px;font-family:inherit;min-height:80px;background:#fffdf8}
+.note-btn{border:none;background:var(--gold);color:#fff;border-radius:999px;padding:8px 20px;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px}
+.submit-btn{width:100%;border:none;background:var(--ok);color:#fff;border-radius:14px;padding:14px;font-size:17px;font-weight:700;cursor:pointer;}
+.submit-btn:disabled{background:#9db3a5;cursor:default;}
+.reveal{display:none;background:#f4ecd9;border-left:4px solid var(--gold);border-radius:10px;padding:12px 14px;margin-top:10px;font-size:14px}
+.reveal.show{display:block}
+.scale{display:flex;align-items:flex-end;gap:10px;margin:10px 0 4px;}
+.scale span{width:44px;text-align:center;font-weight:700;font-size:18px;background:#8c2f39;color:#fff;border-radius:8px;padding-top:8px;opacity:0;transform:translateY(-8px);transition:.4s;font-family:Georgia,serif;}
+.scale.show span{opacity:1;transform:none}
+.scale span:nth-child(1){height:110px;transition-delay:.05s}
+.scale span:nth-child(2){height:86px;background:#a13b46;transition-delay:.3s}
+.scale span:nth-child(3){height:62px;background:#b2535d;transition-delay:.55s}
+.scale span:nth-child(4){height:38px;background:#c06a72;transition-delay:.8s}
+.scale i{display:block;font-style:normal;font-size:11px;font-weight:400;padding:4px 0 8px}
+footer{text-align:center;color:#a3988a;font-size:12px;margin-top:36px;line-height:1.9}
+</style>
+</head>
+<body class="locked">
+<header>
+  <span class="tag">In-Class Activity ① · about 8 minutes</span>
+  <h1>Word Painting in Music<br>— The Weelkes “As Vesta was” Treasure Hunt</h1>
+  <p>An English madrigal from 1601: the composer paints every picture in the poem into the sound itself. Your job: find them all.</p>
+</header>
+
+<div class="card namecard" id="nameCard">
+  <b>👤 First things first — your name</b>
+  <p class="hint" style="margin:4px 0 0">Please enter your name (or student ID). The timer starts as soon as you tap “Start”.</p>
+  <input id="stName" type="text" placeholder="Your name / ID" autocomplete="off">
+  <button class="name-btn" onclick="startAct()">▶ Start the Hunt</button>
+  <p class="greet" id="greet"></p>
+</div>
+
+<h2>🔎 How it works</h2>
+<div class="card">
+<ol class="steps">
+  <li><b>Get ready:</b> when the music starts, follow the lyrics below.</li>
+  <li><b>Hunt:</b> each time a <b>cue word</b> (highlighted in yellow) is “painted” by the music, tap the matching button as fast as you can ✋</li>
+  <li><b>Quiz:</b> after the music ends, answer the 5 matching questions to check you heard how each “painting” is done.</li>
+  <li><b>Submit:</b> tap the green button at the bottom when you finish — your instructor collects the results live.</li>
+</ol>
+</div>
+
+<h2>🎵 The lyrics (yellow = cue words)</h2>
+<div class="card">
+  <p class="lyric">As Vesta was from Latmos hill <mark>descending</mark>,<span class="zh">The goddess Vesta was walking down from Latmos hill,</span></p>
+  <p class="lyric">she spied a maiden Queen the same <mark>ascending</mark>,<span class="zh">when she saw a maiden queen ascending the same way,</span></p>
+  <p class="lyric">attended on by all the shepherds swain;<span class="zh">attended by all her shepherd swains;</span></p>
+  <p class="lyric">to whom Diana's darlings came <mark>running down amain</mark>,<span class="zh">to whom Diana’s darlings came hurrying down in haste,</span></p>
+  <p class="lyric">first <mark>two by two</mark>, then <mark>three by three</mark> together,<span class="zh">first two by two, then three by three together,</span></p>
+  <p class="lyric">leaving their Goddess <mark>all alone</mark>, hasted thither,<span class="zh">leaving their goddess all alone, they hurried there,</span></p>
+  <p class="lyric">and mingling with the shepherds of her train,<span class="zh">and mingling with the shepherds of her train,</span></p>
+  <p class="lyric">with mirthful tunes her presence entertain.<span class="zh">they welcomed her with merry tunes.</span></p>
+  <p class="lyric">Then sang the shepherds and nymphs of Diana:<span class="zh">Then sang the shepherds and Diana’s nymphs:</span></p>
+  <p class="lyric"><mark>Long live fair Oriana!</mark><span class="zh"><mark>Long live fair Oriana!</mark> (Oriana = Queen Elizabeth I)</span></p>
+</div>
+
+<h2>✋ Tap when you hear it (6 eggs in total)</h2>
+<div class="card">
+  <div class="btn-grid">
+    <button class="big-btn" id="b1" onclick="tap('b1',this)">↓ descending<small>walking down the hill</small></button>
+    <button class="big-btn" id="b2" onclick="tap('b2',this)">↑ ascending<small>rising up</small></button>
+    <button class="big-btn" id="b3" onclick="tap('b3',this)">🏃 running down<small>hurrying down</small></button>
+    <button class="big-btn" id="b4" onclick="tap('b4',this)">👥 two by two<small>voices enter in pairs &amp; trios</small></button>
+    <button class="big-btn" id="b5" onclick="tap('b5',this)">🙋 all alone<small>only one voice left</small></button>
+    <button class="big-btn" id="b6" onclick="tap('b6',this)">👑 Long live Oriana<small>long final chords</small></button>
+  </div>
+  <p class="hint">Tip: tap again to undo. Your tap times are recorded for the class speed stats.</p>
+</div>
+
+<h2>📝 Quiz: how is each word “painted”?</h2>
+<div class="card" id="quiz">
+  <div class="quiz-q" data-q="1"><p class="qt">1. How does the music paint “descending” (walking down the hill)?</p><div class="opts">
+    <button class="opt" data-ok="1">The melody keeps falling ↓</button><button class="opt">The melody rises ↑</button><button class="opt">Everyone holds long notes</button><button class="opt">The music stops suddenly</button></div></div>
+  <div class="quiz-q" data-q="2"><p class="qt">2. How does it paint “two by two, then three by three”?</p><div class="opts">
+    <button class="opt" data-ok="1">Voices enter in pairs, then in trios</button><button class="opt">The tempo suddenly doubles</button><button class="opt">Everyone sings in unison throughout</button><button class="opt">It turns into a solo</button></div></div>
+  <div class="quiz-q" data-q="3"><p class="qt">3. How does it paint “all alone”?</p><div class="opts">
+    <button class="opt">All six voices sing together</button><button class="opt" data-ok="1">Only one voice is left singing</button><button class="opt">An instrument plays alone</button><button class="opt">It gets louder and louder</button></div></div>
+  <div class="quiz-q" data-q="4"><p class="qt">4. How does the ending “Long live fair Oriana!” sound?</p><div class="opts">
+    <button class="opt">Fast spoken words</button><button class="opt">The melody keeps falling</button><button class="opt" data-ok="1">Long sustained chords in all voices</button><button class="opt">Faster and faster</button></div></div>
+  <div class="quiz-q" data-q="5"><p class="qt">5. What is this technique — “painting words in music” — called?</p><div class="opts">
+    <button class="opt" data-ok="1">Word Painting</button><button class="opt">Isorhythm</button><button class="opt">Twelve-tone technique</button><button class="opt">The blues scale</button></div></div>
+  <p class="hint">Tap an option for instant feedback — wrong answers reveal the right one.</p>
+</div>
+
+<h2>📤 Submit your answers</h2>
+<div class="card">
+  <button class="submit-btn" id="subBtn" onclick="submitAll()">Submit my answers</button>
+  <p class="hint" id="subMsg"></p>
+</div>
+
+<footer>Classical Music Appreciation · From God to the Human Heart: 250 Years of the Human Voice</footer>
+<div class="result">👤 <b id="who">–</b> ・ 🥚 <b id="egg">0</b>/6 ・ 📝 <b id="score">–</b>/5 ・ ⏱ <b id="timer">00:00</b></div>
+
+<script>
+const WEB3FORMS_KEY=""; // ← free key from web3forms.com (only an email needed — works where Formspree is blocked)
+var SUBMIT_URL=""; // local server: "/submit"; or paste any full endpoint URL
+if(WEB3FORMS_KEY){SUBMIT_URL="https://api.web3forms.com/submit";}
+var name="", t0=null, timerInt=null, submitted=false;
+var eggs=new Set(), eggTimes=[], quizAns=[], score=0;
+function startAct(){
+  var v=document.getElementById('stName').value.trim();
+  if(!v){alert('Please enter your name first 🙂');return;}
+  name=v; t0=Date.now();
+  document.body.classList.remove('locked');
+  document.getElementById('stName').disabled=true;
+  document.querySelector('.name-btn').style.display='none';
+  var g=document.getElementById('greet'); g.style.display='block';
+  g.textContent='✅ Good luck, '+name+'! The timer is running.';
+  document.getElementById('who').textContent=name;
+  timerInt=setInterval(function(){
+    var s=Math.floor((Date.now()-t0)/1000);
+    document.getElementById('timer').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+  },1000);
+}
+function tap(id,btn){
+  var t=(Date.now()-t0)/1000;
+  if(eggs.has(id)){eggs.delete(id);btn.classList.remove('on');
+    eggTimes=eggTimes.filter(function(e){return e.id!==id;});}
+  else{eggs.add(id);btn.classList.add('on');eggTimes.push({id:id,t:Math.round(t*10)/10});}
+  document.getElementById('egg').textContent=eggs.size;
+}
+document.querySelectorAll('.quiz-q').forEach(function(q){
+  var done=false, qn=parseInt(q.dataset.q);
+  q.querySelectorAll('.opt').forEach(function(o){
+    o.addEventListener('click',function(){
+      if(done)return; done=true;
+      var t=(Date.now()-t0)/1000, ok=!!o.dataset.ok;
+      quizAns.push({q:qn,t:Math.round(t*10)/10,ok:ok});
+      if(ok){o.classList.add('right');score++;}
+      else{o.classList.add('wrong'); q.querySelector('[data-ok]').classList.add('right');}
+      q.querySelectorAll('.opt').forEach(function(x){x.disabled=true;});
+      document.getElementById('score').textContent=score;
+    });
+  });
+});
+function submitAll(){
+  if(!t0){alert('Please enter your name and tap Start first.');return;}
+  if(submitted)return;
+  if(quizAns.length<5 && !confirm('You have only answered '+quizAns.length+'/5 quiz questions. Submit anyway?'))return;
+  submitted=true;
+  var btn=document.getElementById('subBtn'); btn.disabled=true; btn.textContent='Submitting…';
+  var payload={name:name, activity:'A1', totalSec:Math.round((Date.now()-t0)/100), eggs:eggTimes, quiz:quizAns};
+  if(!SUBMIT_URL){btn.textContent="✅ Done!";document.getElementById("subMsg").textContent="Your answers are saved on this device. Your instructor will collect responses via Mentimeter.";return;}
+  if(WEB3FORMS_KEY){payload=Object.assign({access_key:WEB3FORMS_KEY,subject:"Class Activity"},payload);}
+  fetch(SUBMIT_URL,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)})
+    .then(function(r){if(!r.ok)throw 0;return r.json();})
+    .then(function(){
+      btn.textContent='✅ Submitted — thank you!';
+      document.getElementById('subMsg').textContent='Your results have been sent to the instructor dashboard.';
+    })
+    .catch(function(){
+      submitted=false; btn.disabled=false; btn.textContent='Submit my answers';
+      document.getElementById('subMsg').textContent='⚠️ Could not send your answers. If the instructor has not set up a submission link, your results stay safely on this device.';
+    });
+}
+</script>
+const WEB3FORMS_KEY="812f25b9-3aa8-4cda-b1b9-5cbe7c19de89"; // 
+</body>
+</html>
