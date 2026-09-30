@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listening Detective ② · The Sonata Journey | Classical Music Appreciation</title>
+<style>
+:root{--paper:#faf6ef;--ink:#2b2620;--accent:#1f3a4d;--gold:#b98a2f;--card:#ffffff;--line:#e7ddcc;--ok:#2e7d4f;--bad:#b23b3b;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;line-height:1.75;max-width:680px;margin:0 auto;padding:0 16px 96px;}
+body.locked .big-btn,body.locked .opt,body.locked textarea,body.locked .note-btn{pointer-events:none;opacity:.45}
+header{background:linear-gradient(135deg,#1f3a4d,#152a38);color:#fff;border-radius:0 0 20px 20px;padding:28px 22px 22px;margin:0 -16px 20px;}
+header .tag{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:1px 12px;font-size:13px;margin-bottom:10px}
+header h1{font-size:24px;line-height:1.35;font-family:Georgia,"Times New Roman",serif;}
+header p{opacity:.92;font-size:14px;margin-top:8px}
+h2{font-size:18px;margin:26px 0 10px;padding-left:12px;border-left:4px solid var(--accent);font-family:Georgia,"Times New Roman",serif;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 2px 10px rgba(60,40,20,.05);}
+.namecard{background:#fdf3e3;border:2px solid var(--gold);}
+.namecard input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px;font-size:17px;background:#fff;margin:8px 0;}
+.name-btn{width:100%;border:none;background:var(--accent);color:#fff;border-radius:12px;padding:12px;font-size:16px;font-weight:700;cursor:pointer;}
+.greet{display:none;color:var(--ok);font-weight:700;margin-top:4px}
+ol.steps{padding-left:22px}
+ol.steps li{margin:8px 0}
+ol.steps b{color:var(--accent)}
+.big-btn{border:2px solid var(--line);background:#fff;border-radius:14px;padding:16px 10px;font-size:16px;font-weight:700;color:var(--ink);cursor:pointer;transition:.15s;line-height:1.4;width:100%}
+.big-btn small{display:block;font-weight:400;color:#8b8177;font-size:12px}
+.big-btn.on{border-color:var(--ok);background:#e9f5ee;color:var(--ok);}
+.tapzone{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.counter{font-size:34px;font-weight:800;color:var(--accent);text-align:center;font-family:Georgia,serif;}
+.quiz-q{padding:12px 0;border-bottom:1px dashed var(--line);}
+.quiz-q:last-child{border-bottom:none}
+.quiz-q .qt{font-weight:700;margin-bottom:8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-size:14px;cursor:pointer}
+.opt.right{border-color:var(--ok);background:#e9f5ee;color:var(--ok);font-weight:700}
+.opt.wrong{border-color:var(--bad);background:#f9eaea;color:var(--bad);}
+.opt:disabled{cursor:default;opacity:.9}
+.hint{font-size:13px;color:#8b8177;margin-top:6px}
+.result{position:fixed;left:0;right:0;bottom:0;background:#2b2620;color:#fff;padding:10px 16px;font-size:14px;z-index:9;text-align:center;}
+.result b{color:#f3c96b}
+.submit-btn{width:100%;border:none;background:var(--ok);color:#fff;border-radius:14px;padding:14px;font-size:17px;font-weight:700;cursor:pointer;}
+.submit-btn:disabled{background:#9db3a5;cursor:default;}
+.reveal{display:none;background:#f4ecd9;border-left:4px solid var(--gold);border-radius:10px;padding:12px 14px;margin-top:10px;font-size:14px}
+.reveal.show{display:block}
+footer{text-align:center;color:#a3988a;font-size:12px;margin-top:36px;line-height:1.9}
+</style>
+</head>
+<body class="locked">
+<header>
+  <span class="tag">In-Class Activity ② · about 10 minutes</span>
+  <h1>The Sonata Journey<br>— Mozart&#39;s melodies vs. Beethoven&#39;s four notes</h1>
+  <p>Two first movements, one journey: STATEMENT → DEVELOPMENT → RETURN. Your ears are the map.</p>
+</header>
+
+<div class="card namecard" id="nameCard">
+  <b>👤 First things first — your name</b>
+  <p class="hint" style="margin:4px 0 0">Please enter your name (or student ID). The timer starts as soon as you tap “Start”.</p>
+  <input id="stName" type="text" placeholder="Your name / ID" autocomplete="off">
+  <button class="name-btn" onclick="startAct()">▶ Start</button>
+  <p class="greet" id="greet"></p>
+</div>
+
+<h2>🔎 How it works</h2>
+<div class="card">
+<ol class="steps">
+  <li><b>Journey 1 — Mozart, Symphony No. 40 in G minor (1st movement):</b> tap the section you think the music is in, the whole way through.</li>
+  <li><b>Journey 2 — Beethoven, Symphony No. 5 (1st movement):</b> same three buttons, fresh counters.</li>
+  <li><b>Vote + quiz:</b> tell us which journey was easier to follow.</li>
+  <li><b>Submit:</b> tap the green button at the bottom when you finish.</li>
+</ol>
+<p class="hint" style="margin-top:8px"><b>The three stops of the journey:</b><br>🗣 <b>STATEMENT</b> — themes are presented (listen for two contrasting ideas: one anxious, one dancing)<br>🌀 <b>DEVELOPMENT</b> — the themes break into fragments and wander far from home, tension rises<br>🏠 <b>RETURN</b> — the first theme comes back: homecoming</p>
+</div>
+
+<h2>🎼 Journey 1 · Mozart, Symphony No. 40 (G minor)</h2>
+<div class="card">
+  <div class="tapzone">
+    <button class="big-btn" onclick="tapSec('M','S',this)">🗣 STATEMENT<small>themes are presented</small></button>
+    <button class="big-btn" onclick="tapSec('M','D',this)">🌀 DEVELOPMENT<small>fragments wander</small></button>
+  </div>
+  <div style="margin-top:10px">
+    <button class="big-btn" onclick="tapSec('M','R',this)">🏠 RETURN<small>the first theme comes home</small></button>
+  </div>
+  <p class="hint" style="margin-top:8px">Statement: <b id="cntMS">0</b> ・ Development: <b id="cntMD">0</b> ・ Return: <b id="cntMR">0</b></p>
+</div>
+
+<h2>🌩 Journey 2 · Beethoven, Symphony No. 5 (C minor)</h2>
+<div class="card">
+  <div class="tapzone">
+    <button class="big-btn" onclick="tapSec('B','S',this)">🗣 STATEMENT<small>four notes take over</small></button>
+    <button class="big-btn" onclick="tapSec('B','D',this)">🌀 DEVELOPMENT<small>the motif multiplies</small></button>
+  </div>
+  <div style="margin-top:10px">
+    <button class="big-btn" onclick="tapSec('B','R',this)">🏠 RETURN<small>the knock comes home</small></button>
+  </div>
+  <p class="hint" style="margin-top:8px">Statement: <b id="cntBS">0</b> ・ Development: <b id="cntBD">0</b> ・ Return: <b id="cntBR">0</b></p>
+</div>
+
+<h2>🗳️ Which journey was easier to follow?</h2>
+<div class="card">
+  <div class="opts">
+    <button class="opt" id="voteM" onclick="vote('Mozart')">🎼 Mozart (singing themes)</button>
+    <button class="opt" id="voteB" onclick="vote('Beethoven')">🌩 Beethoven (dramatic)</button>
+    <button class="opt" id="voteX" onclick="vote('Both hard')">😅 Both were hard</button>
+  </div>
+  <p class="hint" id="voteMsg"></p>
+  <div class="reveal" id="sonataReveal"><b>What you just heard:</b> the sonata form — the “script” of almost every Classical first movement. Mozart fills it with unforgettable melodies; Beethoven fills it with a single four-note cell (short-short-short-LONG). Same script, 20 years apart — one sings, one knocks.</div>
+</div>
+
+<h2>📝 Quick quiz</h2>
+<div class="card" id="quiz">
+  <div class="quiz-q" data-q="1"><p class="qt">1. The three main sections of sonata form, in order, are…</p><div class="opts">
+    <button class="opt">Development – Statement – Return</button><button class="opt" data-ok="1">Exposition – Development – Recapitulation</button><button class="opt">Verse – Chorus – Verse</button><button class="opt">Fast – Slow – Fast</button></div></div>
+  <div class="quiz-q" data-q="2"><p class="qt">2. In the exposition we usually hear…</p><div class="opts">
+    <button class="opt">One theme, repeated unchanged</button><button class="opt" data-ok="1">Two contrasting themes</button><button class="opt">A solo cadenza</button><button class="opt">The finale theme only</button></div></div>
+  <div class="quiz-q" data-q="3"><p class="qt">3. Beethoven&#39;s famous opening motif consists of how many notes?</p><div class="opts">
+    <button class="opt">2</button><button class="opt">3</button><button class="opt" data-ok="1">4 (short-short-short-LONG)</button><button class="opt">8</button></div></div>
+  <div class="quiz-q" data-q="4"><p class="qt">4. What happens in the recapitulation?</p><div class="opts">
+    <button class="opt">A completely new theme appears</button><button class="opt" data-ok="1">The first theme returns — a homecoming</button><button class="opt">The music speeds up to the end</button><button class="opt">Everyone stops playing</button></div></div>
+  <div class="quiz-q" data-q="5"><p class="qt">5. Mozart&#39;s Symphony No. 40 is in G minor, which sounds…</p><div class="opts">
+    <button class="opt" data-ok="1">Dark and anxious</button><button class="opt">Bright and ceremonial</button><button class="opt">Like a lullaby</button><button class="opt">Comic and bouncy</button></div></div>
+  <p class="hint">Tap an option for instant feedback.</p>
+</div>
+
+<h2>📤 Submit your answers</h2>
+<div class="card">
+  <button class="submit-btn" id="subBtn" onclick="submitAll()">Submit my answers</button>
+  <p class="hint" id="subMsg"></p>
+</div>
+
+<footer>Classical Music Appreciation · Week 5: Classicism</footer>
+<div class="result">👤 <b id="who">–</b> ・ 🗣 <b id="barS">0</b> ・ 🌀 <b id="barD">0</b> ・ 🏠 <b id="barR">0</b> ・ ⏱ <b id="timer">00:00</b></div>
+
+<script>
+const WEB3FORMS_KEY=""; // ← free key from web3forms.com (only an email needed)
+var SUBMIT_URL=""; // local server: "/submit"; or paste any full endpoint URL
+if(WEB3FORMS_KEY){SUBMIT_URL="https://api.web3forms.com/submit";}
+var name="", t0=null, timerInt=null, submitted=false;
+var sec={M:{S:0,D:0,R:0}, B:{S:0,D:0,R:0}}, secLog=[], voteChoice=null, quizAns=[], score=0;
+function startAct(){
+  var v=document.getElementById('stName').value.trim();
+  if(!v){alert('Please enter your name first 🙂');return;}
+  name=v; t0=Date.now();
+  document.body.classList.remove('locked');
+  document.getElementById('stName').disabled=true;
+  document.querySelector('.name-btn').style.display='none';
+  var g=document.getElementById('greet'); g.style.display='block';
+  g.textContent='✅ Happy journey, '+name+'! Tap the section you hear.';
+  document.getElementById('who').textContent=name;
+  timerInt=setInterval(function(){
+    var s=Math.floor((Date.now()-t0)/1000);
+    document.getElementById('timer').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+  },1000);
+}
+function tapSec(piece,secID,btn){
+  sec[piece][secID]++;
+  secLog.push({p:piece,s:secID,t:Math.round((Date.now()-t0)/10)/10});
+  document.getElementById('cnt'+piece+secID).textContent=sec[piece][secID];
+  var tot=sec.M.S+sec.M.D+sec.M.R+sec.B.S+sec.B.D+sec.B.R;
+  document.getElementById('barS').textContent=sec.M.S+sec.B.S;
+  document.getElementById('barD').textContent=sec.M.D+sec.B.D;
+  document.getElementById('barR').textContent=sec.M.R+sec.B.R;
+  btn.classList.add('on'); setTimeout(function(){btn.classList.remove('on');},250);
+  if(tot>=3){document.getElementById('sonataReveal').classList.add('show');}
+}
+function vote(c){
+  voteChoice=c;
+  document.getElementById('voteM').classList.toggle('on',c==='Mozart');
+  document.getElementById('voteB').classList.toggle('on',c==='Beethoven');
+  document.getElementById('voteX').classList.toggle('on',c==='Both hard');
+  document.getElementById('voteMsg').textContent='Got it — you voted: '+c;
+}
+document.querySelectorAll('.quiz-q').forEach(function(q){
+  var done=false, qn=parseInt(q.dataset.q);
+  q.querySelectorAll('.opt').forEach(function(o){
+    o.addEventListener('click',function(){
+      if(done)return; done=true;
+      var t=(Date.now()-t0)/1000, ok=!!o.dataset.ok;
+      quizAns.push({q:qn,t:Math.round(t*10)/10,ok:ok});
+      if(ok){o.classList.add('right');score++;}
+      else{o.classList.add('wrong'); q.querySelector('[data-ok]').classList.add('right');}
+      q.querySelectorAll('.opt').forEach(function(x){x.disabled=true;});
+    });
+  });
+});
+function submitAll(){
+  if(!t0){alert('Please enter your name and tap Start first.');return;}
+  if(submitted)return;
+  if(quizAns.length<5 && !confirm('You have only answered '+quizAns.length+'/5 questions. Submit anyway?'))return;
+  submitted=true;
+  var btn=document.getElementById('subBtn'); btn.disabled=true; btn.textContent='Submitting…';
+  var payload={name:name, activity:'C2', totalSec:Math.round((Date.now()-t0)/100),
+    mozart:sec.M, beethoven:sec.B, secLog:secLog, vote:voteChoice, quiz:quizAns};
+  if(!SUBMIT_URL){btn.textContent='✅ Done!';document.getElementById('subMsg').textContent='Your answers are saved on this device. Your instructor will collect responses via Mentimeter.';return;}
+  if(WEB3FORMS_KEY){payload=Object.assign({access_key:WEB3FORMS_KEY,subject:"Class Activity"},payload);}
+  fetch(SUBMIT_URL,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)})
+    .then(function(r){if(!r.ok)throw 0;return r.json();})
+    .then(function(){btn.textContent='✅ Submitted — thank you!';document.getElementById('subMsg').textContent='Your results have been sent to the instructor.';})
+    .catch(function(){submitted=false;btn.disabled=false;btn.textContent='Submit my answers';document.getElementById('subMsg').textContent='⚠️ Could not send your answers. If the instructor has not set up a submission link, your results stay safely on this device.';});
+}
+</script>
+</body>
+</html>
